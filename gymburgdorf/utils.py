@@ -1,35 +1,7 @@
-from django.shortcuts import redirect
-from django.urls import reverse
-from django.utils.html import mark_safe
 from django.conf import settings
 
 import requests
 import datetime
-
-
-def htmlurl(url, external=False, text="Bearbeiten"):
-    return mark_safe(f'<a target="_blank" href="{url}">{text}</a>') if external else mark_safe(f'<a href="{url}">{text}</a>')
-
-
-def isfloat(string):
-    try:
-        float(string)
-        return True
-    except ValueError:
-        return False
-
-
-def durchschnitt(wertgewichtpaare: list):
-    if wertgewichtpaare:
-        gesamtnote = 0
-        gesamtgewicht = 0
-        for note, gewicht in wertgewichtpaare:
-            if note and gewicht:
-                gesamtnote += note*gewicht
-                gesamtgewicht += gewicht
-        if gesamtgewicht > 0 and gesamtnote > 0:
-            return round(gesamtnote / gesamtgewicht, 3)
-    return None
 
 def get_access_token(request):
     social = request.user.social_auth.get(provider='google-oauth2')

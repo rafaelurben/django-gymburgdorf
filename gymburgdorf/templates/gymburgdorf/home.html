@@ -1,0 +1,38 @@
+{% extends 'gymburgdorf/base.html' %}
+
+{% block menubar %}{% endblock menubar %}
+
+{% block title %}Startseite{% endblock title %}
+            
+{% block content %}
+    <h2>Klassentools</h2>
+    <div class="d-flex flex-row gap-2 my-3">
+        <a class="btn btn-primary" href="{% url 'gymburgdorf:23h' %}">23h</a>
+    </div>
+    <h2>Externe Links</h2>
+    <p>
+        Diverse praktische externe Links findest du hier: 
+        <div class="d-flex flex-column gap-2" style="width: fit-content">
+            <a class="btn btn-success d-flex align-items-center" href="https://klassenbuch.gymburgdorf.ch/" target="_blank">
+                <i class="fas fa-fw fa-book"></i>
+                <span class="ms-1">Klassenbuch</span>
+            </a>
+            <a class="btn btn-success d-flex align-items-center" href="http://mail.gymburgdorf.ch/" target="_blank">
+                <i class="fas fa-fw fa-envelope"></i>
+                <span class="ms-1">Mail</span>
+            </a>
+            <a class="btn btn-success d-flex align-items-center" href="https://stpl.gymburgdorf.ch/" target="_blank">
+                <i class="fas fa-fw fa-calendar-alt"></i>
+                <span class="ms-1">Stundenplan</span>
+            </a>
+            <a class="btn btn-success d-flex align-items-center" href="https://diskstation.gymburgdorf.ch/ib/php_info2/aktuell.php" target="_blank">
+                <i class="fas fa-fw fa-info-circle"></i>
+                <span class="ms-1">Infoboard</span>
+            </a>
+            <a class="btn btn-success d-flex align-items-center" href="https://info.gymburgdorf.ch/" target="_blank">
+                <i class="fas fa-fw fa-info-circle"></i>
+                <span class="ms-1">Info-Seite</span>
+            </a>
+        </div>
+    </p>
+{% endblock content %}

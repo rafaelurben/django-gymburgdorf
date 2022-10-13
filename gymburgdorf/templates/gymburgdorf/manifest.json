@@ -1,8 +1,8 @@
 {
     "name": "GymBurgdorf",
-    "short_name": "GyBu App",
-    "start_url": "{% url 'gymburgdorf:main' %}",
-    "scope": "{% url 'gymburgdorf:main' %}",
+    "short_name": "GymBurgdorf",
+    "start_url": "{% url 'gymburgdorf:home' %}",
+    "scope": "{% url 'gymburgdorf:home' %}",
     "display": "standalone",
     "background_color": "#000",
     "theme_color": "#000",
