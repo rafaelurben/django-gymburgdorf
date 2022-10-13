@@ -1,0 +1,17 @@
+{% extends 'gymburgdorf/23h/base.html' %}
+
+{% block menubar %}{% endblock menubar %}
+
+{% block title %}Startseite{% endblock title %}
+
+{% block heading %}
+    <h1>23h</h1>
+    <p>Du bist eingeloggt als <strong>{{ user.username }}</strong>. <a class="text-white" href="{% url 'gymburgdorf:23h-logout' %}">Ausloggen</a></p>
+{% endblock heading %}
+            
+{% block content %}
+    <h2>Seiten</h2>
+    
+    <a href="{% url 'gymburgdorf:23h-maturabooks' %}" class="btn btn-primary">Maturabücher</a>
+    <a href="{% url 'gymburgdorf:23h-muluscollection' %}" class="btn btn-primary">MULUS-Sammlung</a>
+{% endblock content %}

@@ -1,0 +1,18 @@
+{% extends "gymburgdorf/pages/base.html" %}
+
+{% block body %}
+    <h1>{{ kalender.description }}</h1>
+    <div>
+        {% for item in kalender.items %}
+            <div>
+                <b>{{ item.summary }}</b>
+                <br>
+                <i>{{ item.start }}
+                    -
+                    {{ item.end }}</i>
+                <br>
+                <br>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

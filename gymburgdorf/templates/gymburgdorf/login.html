@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="de">
+
+    {% load static %}
+
+    <head>
+        <title>Login | GymBurgdorf App</title>
+        <meta name="description" content="Eine unabhängige App zum Gymnasium Burgdorf">
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="theme-color" content="#000"/>
+
+        <link rel="manifest" href="{% url "gymburgdorf:manifest" %}">
+        <link rel="shortcut icon" type="image/x-icon" href="{% static "gymburgdorf/favicon.ico" %}">
+        <link rel="apple-touch-icon" href="{% static "gymburgdorf/favicon.ico" %}">
+
+        <style>
+            .no-underline a {
+                text-decoration: none;
+            }
+
+            * {
+                -webkit-overflow-scrolling: auto;
+            }
+        </style>
+
+        <link rel="stylesheet" type="text/css" href="{% static "gymburgdorf/css/darkmode.css" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "gymburgdorf/css/panels.css" %}">
+
+        <noscript>
+            <style>
+                .panel {
+                    display: none;
+                }
+                noscript.panel {
+                    display: block;
+                }
+            </style>
+        </noscript>
+    </head>
+
+    <body>
+        <div id="head">
+            <style>
+                body {
+                    overflow: visible !important;
+                }
+            </style>
+        </div>
+
+        <div id="body">
+            <div class="panel-container">
+                <div class="panel">
+
+                    <img src="{% static "gymburgdorf/images/logo.png" %}">
+
+                    <div>
+                        <h2>GymBurgdorf App - Login</h2>
+
+                        <p>Hinweis: Diese App steht mit dem Gymnasium Burgdorf
+                            <b>nicht</b>
+                            in Verbindung, jedoch können zum einloggen nur gymburgdorf.ch-Adressen verwendet werden.
+                        </p>
+
+                        <br>
+                        
+                        <h3>Login mit Google</h3>
+                        
+                        <p>
+                            {% if request.GET.next %}
+                                <a class="nostyle" href="{% url 'social-auth:begin' 'google-oauth2' %}?next={{ request.GET.next }}">
+                                    <button class="secondary">Weiter mit Google</button>
+                                </a>
+                            {% else %}
+                                <a class="nostyle" href="{% url 'social-auth:begin' 'google-oauth2' %}?next={% url 'gymburgdorf:main' %}">
+                                    <button class="secondary">Weiter mit Google</button>
+                                </a>
+                            {% endif %}
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="scripts">
+            {% if alert %}
+                <script>
+                    top.toast({
+                        {% for k, v in alert.items %}
+                            {{ k }}: "{{ v }}",
+                        {% endfor %}
+                    });
+                </script>
+            {% endif %}
+        </div>
+    </body>
+
+</html>

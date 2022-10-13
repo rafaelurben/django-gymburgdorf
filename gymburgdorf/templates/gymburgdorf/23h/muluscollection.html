@@ -1,0 +1,106 @@
+{% extends 'gymburgdorf/23h/base.html' %}
+
+{% block title %}MULUS-Sammlung{% endblock title %}
+
+{% block extrahead %}
+    <style>
+        .mfix {
+            margin: 1px 1px 1px 0;
+        }
+    </style>
+{% endblock extrahead %}
+
+{% block heading %}
+    <h1>23h - MULUS-Sammlung</h1>
+{% endblock heading%}
+                    
+{% block content %}
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" integrity="sha384-d3UHjPdzJkZuk5H3qKYMLRyWLAQBJbby2yr2Q58hXXtAGF8RSNO9jpLDlKKPv5v3" crossorigin="anonymous"></script>
+
+    <h3>Neues Zitat hinzufügen</h3>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <input hidden name="method" value="add">
+        <textarea required name="content" id="content" rows="3" class="form-control my-1" placeholder="A: «Hallo!»
+B: «HI!»" minlength="10"></textarea>
+        <select required multiple name="people" id="quote_add_people_select">
+            {% for person in people %}
+                <option value="{{ person.id }}">{{ person.first_name }} {{ person.last_name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Zitat hinzufügen" class="btn btn-primary my-1">
+    </form>
+
+    <h3 class="mt-2">Zitate</h3>
+
+    <div class="w-100 overflow-scroll">
+        <table class="table table-striped table-dark overflow-scroll">
+            <thead>
+                <tr>
+                    <th>Personen</th>
+                    <th>Zitat</th>
+                    <th>Bewertung</th>
+                    <th>Aktionen</th>
+                    <th>Erstellt&nbsp;von</th>
+                    <th>Erstellt&nbsp;am</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for quote in quotes %}
+                    <tr>
+                        <td>{{ quote.person_names }}</td>
+                        <td>{{ quote.content }}</td>
+                        <td>{{ quote.total_likes }} / {{ quote.total_dislikes }} (Total {{ quote.total_reviews }})</td>
+                        <td>
+                            {% if quote.user_review_like is None %}
+                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=like&q={{ quote.id }}" class="btn btn-outline-success mfix">
+                                    <i class="fas fa-fw fa-thumbs-up"></i>
+                                </a>
+                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=dislike&q={{ quote.id }}" class="btn btn-outline-danger mfix">
+                                    <i class="fas fa-fw fa-thumbs-down"></i>
+                                </a>
+                            {% elif quote.user_review_like %}
+                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=remove_review&q={{ quote.id }}" class="btn btn-success mfix">
+                                <i class="fas fa-fw fa-thumbs-up"></i>
+                                </a>
+                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=dislike&q={{ quote.id }}" class="btn btn-outline-danger mfix">
+                                    <i class="fas fa-fw fa-thumbs-down"></i>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=like&q={{ quote.id }}" class="btn btn-outline-success mfix">
+                                    <i class="fas fa-fw fa-thumbs-up"></i>
+                                </a>
+                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=remove_review&q={{ quote.id }}" class="btn btn-danger mfix">
+                                    <i class="fas fa-fw fa-thumbs-down"></i>
+                                </a>
+                            {% endif %}
+                            {% if quote.created_by == request.user or request.user.is_superuser %}
+                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=delete&q={{ quote.id }}" class="btn btn-danger mfix"><i class="fas fa-fw fa-trash"></i></a>
+                            {% endif %}
+                            </td>
+                        <td>{{ quote.created_by.username }}</td>
+                        <td>{{ quote.created_at|date:"DATETIME_FORMAT" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">Noch nichts vorhanden...</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#quote_add_people_select').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: 'Personen suchen & auswählen',
+            });
+        });
+    </script>
+{% endblock content %}

@@ -1,0 +1,28 @@
+* {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: auto;
+}
+
+/* Diverses */
+.swalfootermultiline {
+    display: block !important;
+    text-align: center;
+}
+
+.disable-select {
+    user-select: none;
+    /* supported by Chrome and Opera */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+}
+
+.preservelines {
+    white-space: pre-line;
+}

@@ -1,0 +1,183 @@
+:root {
+    --color-background: #121212;
+    --color-on-background: rgba(255, 255, 255, 0.87);
+    /* Surface */
+    --color-surface: #2c2c2c;
+    --color-on-surface: rgba(255, 255, 255, 0.87);
+    --color-on-surface-2: rgba(255, 255, 255, 0.7);
+    /* Error */
+    --color-error: #cf6679;
+    --color-error-hover: #d6435e;
+    --color-on-error: rgba(0, 0, 0, 0.87);
+    --color-on-error-2: rgba(0, 0, 0, 0.6);
+    --color-on-error-3: rgba(0, 0, 0, 0.38);
+    /* Primary */
+    --color-primary: #bb86fc;
+    --color-primary-hover: #a066e8;
+    --color-on-primary: #000000;
+    /* Secondary */
+    --color-secondary: #03dac6;
+    --color-secondary-hover: #0dc1b0;
+    --color-on-secondary: #000000;
+    /* Shadow */
+    --color-hover-shadow: rgba(200, 200, 200, 0.1);
+    /* Navigation */
+    --nav-background-color: #202020;
+    --nav-links-color: rgba(255, 255, 255, 0.7);
+    --nav-links-color-hover: rgba(255, 255, 255, 1);
+    --nav-logo-color: rgba(255, 255, 255, 0.85);
+    --nav-logo-color-hover: rgba(255, 255, 255, 1);
+    --nav-toggle-color: rgba(255, 255, 255, 1);
+    /* Global changes */
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+}
+
+a {
+    color: var(--color-on-surface-2);
+}
+
+/* SweetAlert2 */
+.swal2-popup.swal2-modal,
+.swal2-popup.swal2-toast {
+    background-color: var(--color-surface) !important;
+    box-shadow: none !important;
+}
+
+.swal2-range {
+    background-color: var(--color-surface) !important;
+    color: var(--color-on-surface) !important;
+}
+
+.swal2-title {
+    color: var(--color-on-surface) !important;
+}
+
+.swal2-content,
+.swal2-content a,
+.swal2-footer a {
+    color: var(--color-on-surface-2) !important;
+    border: none !important;
+}
+
+.swal2-footer {
+    border: none !important;
+    word-break: break-all;
+}
+
+.swal2-styled.swal2-cancel {
+    background-color: var(--color-primary) !important;
+    background-image: none !important;
+    color: var(--color-on-primary) !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.swal2-styled.swal2-cancel a {
+    color: var(--color-on-primary) !important;
+}
+
+.swal2-styled.swal2-cancel:hover {
+    background-color: var(--color-primary-hover) !important;
+}
+
+.swal2-styled.swal2-confirm {
+    background-color: var(--color-secondary) !important;
+    background-image: none !important;
+    color: var(--color-on-secondary) !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.swal2-styled.swal2-confirm a {
+    color: var(--color-on-secondary) !important;
+}
+
+.swal2-styled.swal2-confirm:hover {
+    background-color: var(--color-secondary-hover) !important;
+}
+
+.swal2-image {
+    border-radius: 5px !important;
+}
+
+/* Forms */
+input,
+select,
+textarea,
+button {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid var(--color-on-surface-2);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit],
+button {
+    width: 100%;
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+input[type=submit]:hover,
+button:hover {
+    background-color: var(--color-primary-hover);
+}
+
+input[type=submit].secondary,
+button.secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-on-secondary);
+}
+
+input[type=submit].secondary:hover,
+button.secondary:hover {
+    background-color: var(--color-secondary-hover);
+}
+
+input[type=submit].error,
+button.error {
+    background-color: var(--color-error);
+    color: var(--color-on-error);
+}
+
+input[type=submit].error:hover,
+button.error:hover {
+    background-color: var(--color-error-hover);
+}
+
+textarea {
+    resize: none;
+    resize: vertical;
+}
+
+label {
+    color: var(--color-on-surface-2);
+}
+
+.formcontainer {
+    border-radius: 5px;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    padding: 20px;
+    margin: 20px;
+}
+
+.errorlist {
+    color: red;
+}
+
+.hide {
+    display: none !important;
+}

@@ -1,0 +1,85 @@
+{% extends 'gymburgdorf/pages/base.html' %}
+
+{% load static %}
+
+{% block body %}
+    <div class="panel-container one-column">
+        <noscript class="panel error">
+            <div>
+                <h3>JavaScript deaktiviert</h3>
+                <p>Bitte aktiviere JavaScript, um diese Webseite zu verwenden.</p>
+            </div>
+        </noscript>
+
+        <div class="panel error onoffline">
+            <div>
+                <h3>Du bist offline!</h3>
+                <p>Um diese App zu verwenden, verbinde dich bitte mit dem Internet!</p>
+            </div>
+        </div>
+
+        <div class="panel no-underline">
+            <div>
+                <h3>Willkommen</h3>
+                <p>
+                    Viel Spass mit dieser Web-App!
+                    <br><br>
+                    Du bist eingeloggt als {{ request.user.username }}.
+                    <br><br>
+                    <a target="_top" href="{% url "gymburgdorf:23h-logout" %}"><i class="fas fa-fw fa-sign-out-alt"></i>&nbsp;Logout</a>
+                </p>
+            </div>
+        </div>
+
+        {% if infos.exists %}
+            <div class="panel">
+                <div>
+                    <h3>Aktuelle Infos</h3>
+                    <br>
+                    {% for info in infos %}
+                        <b>{{ info.title }}</b>
+                        <p>{{ info.html_text }}</p>
+                        <br>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="panel no-underline">
+            <div>
+                <h3>Externe Links</h3>
+                <p>
+                    Diverse praktische externe Links findest du hier: 
+                    <br><br>
+                    <a href="https://klassenbuch.gymburgdorf.ch/" target="_blank">
+                        <i class="fas fa-fw fa-book"></i>&nbsp;Klassenbuch
+                    </a>
+                    <br>
+                    <a href="http://mail.gymburgdorf.ch/" target="_blank">
+                        <i class="fas fa-fw fa-envelope"></i>&nbsp;Mail
+                    </a>
+                    <br>
+                    <a href="https://stpl.gymburgdorf.ch/" target="_blank">
+                        <i class="fas fa-fw fa-calendar-alt"></i>&nbsp;Stundenplan
+                    </a>
+                    <br>
+                    <a href="https://diskstation.gymburgdorf.ch/ib/php_info2/aktuell.php" target="_blank">
+                        <i class="fas fa-fw fa-info-circle"></i>&nbsp;Infoboard
+                    </a>
+                    <br>
+                    <a href="https://info.gymburgdorf.ch/" target="_blank">
+                        <i class="fas fa-fw fa-info-circle"></i>&nbsp;Info-Seite
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="panel app-installprompt">
+            <div>
+                <h3>GymBurgdorf App</h3>
+                <p>Du kannst diese Seite als "App" installieren.
+                    <a href="#home" onclick="top.askForAppInstall()">Mehr Infos</a>.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

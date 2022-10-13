@@ -1,0 +1,175 @@
+{% extends 'gymburgdorf/23h/base.html' %}
+
+{% block title %}Maturbücher{% endblock title %}
+
+{% block heading %}
+    <h1>23h - Maturabücher</h1>
+{% endblock heading %}
+
+{% block content %}
+
+    <script>
+        function addbook(action) {
+            var url = new URL(window.location.href)
+            url.pathname = "{% url 'gymburgdorf:23h-maturabooks-api' %}";
+            var search = new URLSearchParams()
+            search.set("action", action || "presave");
+            search.set("book", document.getElementById("booktitle").value);
+            url.search = search.toString();
+            window.location.href = url;
+        }
+    </script>
+
+    <h2>Deine reservierten Bücher</h2>
+
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>Titel</th>
+                <th>Reserviert am</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in reservations %}
+                <tr>
+                    <td>{{ s.book }}</td>
+                    <td>{{ s.created_at }}</td>
+                    <td>
+                        <a class="btn btn-danger" href="{% url 'gymburgdorf:23h-maturabooks-api' %}?a=remove&b={{ s.book | urlencode }}">
+                            <i class="fas fa-trash fa-fw"></i>
+                        </a>
+                        <a class="btn btn-success" href="{% url 'gymburgdorf:23h-maturabooks-api' %}?a=presave&b={{ s.book | urlencode }}">
+                            Nur vormerken
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">Keine Bücher reserviert</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h2>Deine vorgemerkten Bücher</h2>
+
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>Titel</th>
+                <th>Reserviert am</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in presaves %}
+                <tr>
+                    <td>{{ s.book }}</td>
+                    <td>{{ s.created_at }}</td>
+                    <td>
+                        <a class="btn btn-danger" href="{% url 'gymburgdorf:23h-maturabooks-api' %}?a=remove&b={{ s.book | urlencode }}">
+                            <i class="fas fa-trash fa-fw"></i>
+                        </a>
+                        {% if can_reserve %}
+                            <a class="btn btn-warning" href="{% url 'gymburgdorf:23h-maturabooks-api' %}?a=reserve&b={{ s.book | urlencode }}">
+                                Reservieren
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">Keine Bücher vorgemerkt</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Buch hinzufügen</h2>
+
+    <div class="my-4 mx-1">
+
+        <div class="input-group mb-3">
+            <input id="booktitle" type="text" class="form-control" placeholder="Buchtitel" />
+            <button class="btn btn-success" href="#" onclick="addbook('presave')">Vormerken</button>
+            {% if can_reserve %}
+                <button class="btn btn-warning" href="#" onclick="addbook('reserve')">Reservieren</button>
+            {% endif %}
+        </div>
+        {% if not can_reserve %}
+            <p>
+                Hinweis: Du hast die maximale Anzahl an Reservationen erreicht! Du kannst weiterhin Bücher vormerken.
+            </p>
+        {% endif %}
+    </div>
+
+    <h2>Alle Bücher</h2>
+    
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>Titel</th>
+                <th>Anzahl Reservierungen</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in booklist %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.count_reserved }}{% if book.count_presaved %} (+ {{ book.count_presaved }} vorgemerkt){% endif %}</td>
+                    <td>
+                        {% if book.onmylist == "reserved" %}
+                            <a class="btn btn-danger" href="{% url 'gymburgdorf:23h-maturabooks-api' %}?a=remove&b={{ book.title | urlencode }}">
+                                <i class="fas fa-trash fa-fw"></i>
+                            </a>
+                            <a class="btn btn-success" href="{% url 'gymburgdorf:23h-maturabooks-api' %}?a=presave&b={{ book.title | urlencode }}">
+                                Nur vormerken
+                            </a>
+                        {% elif book.onmylist == "presaved" %}
+                            <a class="btn btn-danger" href="{% url 'gymburgdorf:23h-maturabooks-api' %}?a=remove&b={{ book.title | urlencode }}">
+                                <i class="fas fa-trash fa-fw"></i>
+                            </a>
+                            {% if can_reserve and book.can_reserve %}
+                                <a class="btn btn-warning" href="{% url 'gymburgdorf:23h-maturabooks-api' %}?a=reserve&b={{ book.title | urlencode }}">
+                                    Reservieren
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            {% if book.can_reserve %}
+                                <a class="btn btn-warning" href="{% url 'gymburgdorf:23h-maturabooks-api' %}?a=reserve&b={{ book.title | urlencode }}">
+                                    Reservieren
+                                </a>
+                            {% endif %}
+                            <a class="btn btn-success" href="{% url 'gymburgdorf:23h-maturabooks-api' %}?a=presave&b={{ book.title | urlencode }}">
+                                Vormerken
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">Keine Bücher vorhanden</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}
+
+{% block scripts %}
+    <script>
+        var input = document.getElementById("booktitle");
+        
+        input.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                
+                if (input.value.length > 0) {
+                    addbook("presave");
+                }
+            }
+        }); 
+    </script>
+{% endblock scripts %}

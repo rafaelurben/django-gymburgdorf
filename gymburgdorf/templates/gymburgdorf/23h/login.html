@@ -1,0 +1,24 @@
+{% extends 'gymburgdorf/23h/base.html' %}
+
+{% load static %}
+
+{% block menubar %}{% endblock menubar %}
+
+{% block title %}Login{% endblock title %}
+
+{% block heading %}
+    <h1>23h - Login</h1>
+{% endblock heading %}
+            
+
+{% block content %}
+    <p>Bitte logge dich mit deinem @gymburgdorf.ch Google-Account ein:<br></p>
+    
+    {% url 'gymburgdorf:23h' as homeurl %}
+    <div class="d-inline-block">
+        <a class="btn btn-outline-white text-dark bg-white" href="{% url 'social-auth:begin' 'google-oauth2' %}?next={% firstof request.GET.next homeurl %}" role="button">
+        <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="{% static 'account/logo_google-oauth2.svg' %}" />
+        Mit Google anmelden
+        </a>
+    </div>
+{% endblock content %}

@@ -1,0 +1,15 @@
+{% extends 'gymburgdorf/23h/base.html' %}
+
+{% block menubar %}{% endblock menubar %}
+
+{% block title %}Fehler{% endblock title %}
+
+{% block heading %}
+    <h1>23h - Fehler</h1>
+{% endblock heading %}
+            
+{% block content %}
+    <p>
+        <a href="{% url 'gymburgdorf:23h' %}" class="btn btn-primary">Zurück zur Startseite</a>
+    </p>
+{% endblock content %}

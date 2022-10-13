@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+
+    <head>
+        <title>GymBurgdorf App</title>
+        <meta name="description" content="Eine unabhängige App zum Gymnasium Burgdorf">
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="theme-color" content="#000"/>
+
+        {% load static %}
+        <link rel="manifest" href="{% url "gymburgdorf:manifest" %}">
+        <link rel="shortcut icon" type="image/x-icon" href="{% static "gymburgdorf/favicon.ico" %}">
+        <link rel="apple-touch-icon" href="{% static "gymburgdorf/favicon.ico" %}">
+        {% comment %}
+        <link rel="apple-touch-startup-image" href="{% static "gymburgdorf/images/logo.png" %}">
+        {% endcomment %}
+
+        <link rel="stylesheet" type="text/css" href="{% static "gymburgdorf/css/darkmode.css" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "gymburgdorf/css/navigation.css" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "gymburgdorf/css/main.css" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "gymburgdorf/css/panels.css" %}">
+
+        <script>
+            // serviceWorkerUrl = "{% url 'gymburgdorf:service-worker' %}";
+        </script>
+
+        <noscript>
+            <style>
+                #page-home {
+                    height: 100%;
+                    display: block !important;
+                    overflow-y: auto !important;
+                }
+                #iframe-home {
+                    height: 100%;
+                }
+                #header-image {
+                    background-image: url("https://static.wixstatic.com/media/8e1d34_803ac992e50d4f1dacb988d95576641a~mv2.jpg/v1/fill/w_1799,h_596,al_c,q_85,usm_0.66_1.00_0.01/8e1d34_803ac992e50d4f1dacb988d95576641a~mv2.webp");
+                }
+            </style>
+        </noscript>
+    </head>
+
+    <body>
+        <div id="loading-container">
+            <div></div>
+        </div>
+
+        <div id="header-image"></div>
+
+        <div id="header-navigation" class="disable-select">
+            <nav id="navbar">
+                <div id="navbar-toggle" onclick="navbar_toggle()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <a id="navbar-logo" href="#home">GymBurgdorf App</a>
+                <ul id="navbar-menu">
+                    <li>
+                        <a class="nav-link" id="link-home" href="#home">Home</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" id="link-infoboard" href="#infoboard">Infoboard</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" id="link-kalender" href="#kalender">Kalender</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" id="link-stundenplan" href="#stundenplan">Stundenplan</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" id="link-noten" href="#noten">Noten</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" id="link-usercontent" href="#usercontent">Benutzerinhalt</a>
+                    </li>
+                    <li>
+                        <a class="nav-link hide" id="link-merch" href="#merch">Merch</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div id="content">
+        </div>
+
+        <div id="contentscripts">
+        </div>
+
+        <!-- SweetAlert -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://kit.fontawesome.com/67ab7aa4a7.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.1/imagesloaded.pkgd.min.js"></script>
+
+        <script src="{% static "gymburgdorf/js/navigation.js" %}"></script>
+        <script src="{% static "gymburgdorf/js/main.js" %}"></script>
+        <script src="{% static "gymburgdorf/js/workermanager.js" %}"></script>
+        <script src="{% static 'gymburgdorf/js/panels.js' %}"></script>
+
+    </body>
+
+</html>

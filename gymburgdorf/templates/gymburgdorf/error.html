@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+
+    <head>
+        <title>Error | GymBurgdorf App</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static "gymburgdorf/css/darkmode.css" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "gymburgdorf/css/panels.css" %}">
+
+        <script>
+            function getSettings() {
+                var settings = {};
+                const _pairs = window.location.search.substr(1).split("&");
+                for (_pair in _pairs) {
+                    const _p = _pairs[_pair].split("=");
+                    if (_p.length > 1) {
+                        settings[_p[0]] = _p[1];
+                    } else {
+                        settings[_p[0]] = true;
+                    }
+                }
+                return settings;
+            }
+
+            // window.onload = function () {
+            //     const settings = getSettings();
+            //     if ("errorcode" in settings) {
+            //         document.getElementById("errorcode").innerHTML = settings["errorcode"].replace("%20", " ");
+            //     }
+            //     if ("errormsg" in settings) {
+            //         document.getElementById("errormsg").innerHTML = settings["errormsg"].replace("%20", " ");
+            //     }
+            // }
+        </script>
+
+    </head>
+
+    <body>
+        <div class="panel-container">
+            <div class="panel error">
+                <div>
+                    <h3 id="errorcode">{{ errorcode }}</h3>
+                    <p id="errormsg">{{ errormsg }}</p>
+                    <p>
+                        <a onclick="window.history.go(-1);" href="#">Zurück</a>
+                        zur vorherigen Seite.</p>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.1/imagesloaded.pkgd.min.js"></script>
+        <script src="{% static 'gymburgdorf/js/panels.js' %}"></script>
+
+    </body>
+
+</html>
