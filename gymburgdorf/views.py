@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib import messages, auth
 
 # Create your views here.
 
@@ -16,7 +17,17 @@ def manifest(request):
     response["Service-Worker-Allowed"] = reverse('gymburgdorf:home')
     return response
 
+# Account
+
+def login(request):
+    return render(request, "gymburgdorf/login.html")
+
+def logout(request):
+    auth.logout(request)
+    messages.success(request, "Du wurdest erfolgreich ausgeloggt!", extra_tags="alert-success")
+    return redirect(reverse('gymburgdorf:home'))
+
 # Error
 
 def error404(request):
-    return render(request, 'gymburgdorf/404.html')
+    return render(request, 'gymburgdorf/404.html', status=404)

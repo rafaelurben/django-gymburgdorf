@@ -1,21 +1,12 @@
 {% extends 'gymburgdorf/23h/base.html' %}
 
-{% block menubar %}
-    <div class="row mb-3">
-        <div class="col-4">
-            <a class="text-white text-decoration-none" href="{% url 'gymburgdorf:home' %}"><i class="fas fa-arrow-left"></i> Zurück</a>
-        </div>
-        <div class="col-8 text-end">
-            Du bist eingeloggt als <strong>{{ user.username }}</strong>.
-        </div>
-    </div>
-{% endblock menubar %}
+{% block backurl %}{% url 'gymburgdorf:home' %}{% endblock backurl %}
 
 {% block title %}Startseite{% endblock title %}
 
 {% block heading %}
     <h1>23h Klassentools</h1>
-    <p>Du bist eingeloggt als <strong>{{ user.username }}</strong>. <a class="text-white" href="{% url 'gymburgdorf:23h-logout' %}">Ausloggen</a></p>
+    <p>Du bist eingeloggt als <strong>{{ user.username }}</strong>. <a class="text-white" href="{% url 'gymburgdorf:logout' %}">Ausloggen</a></p>
 {% endblock heading %}
             
 {% block content %} 

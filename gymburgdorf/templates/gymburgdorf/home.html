@@ -5,6 +5,10 @@
 {% block title %}Startseite{% endblock title %}
             
 {% block content %}
+    {% if request.user.is_authenticated %}
+        <p>Du bist eingeloggt als <strong>{{ user.username }}</strong>. <a class="text-white" href="{% url 'gymburgdorf:logout' %}">Ausloggen</a></p>
+    {% endif %}
+
     <h2>Klassentools</h2>
     <div class="d-flex flex-row gap-2 my-3">
         <a class="btn btn-primary" href="{% url 'gymburgdorf:23h' %}">23h</a>

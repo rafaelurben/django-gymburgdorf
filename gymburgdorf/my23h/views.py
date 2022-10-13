@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages, auth
+from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 
 from .models import MaturaBookSelection, MulusCollectionPerson, MulusCollectionQuote, MulusCollectionQuoteReview
@@ -8,17 +8,10 @@ from ..decorators import gymburgdorf_user_required
 
 # Home
 
-@login_required(login_url=reverse_lazy("gymburgdorf:23h-login"))
+@login_required(login_url=reverse_lazy("gymburgdorf:login"))
 @gymburgdorf_user_required(klasse="23h")
 def home(request):
     return render(request, "gymburgdorf/23h/home.html")
-
-def login(request):
-    return render(request, "gymburgdorf/23h/login.html")
-
-def logout(request):
-    auth.logout(request)
-    return redirect(reverse('gymburgdorf:23h-login'))
 
 def notfound(request):
     messages.error(request, "Diese Seite existiert nicht!", extra_tags="alert-danger")
@@ -26,7 +19,7 @@ def notfound(request):
 
 # Maturabooks
 
-@login_required(login_url=reverse_lazy("gymburgdorf:23h-login"))
+@login_required(login_url=reverse_lazy("gymburgdorf:login"))
 @gymburgdorf_user_required(klasse="23h")
 def maturabooks(request):
     return render(request, "gymburgdorf/23h/maturabooks.html", {
@@ -37,7 +30,7 @@ def maturabooks(request):
     })
 
 
-@login_required(login_url=reverse_lazy("gymburgdorf:23h-login"))
+@login_required(login_url=reverse_lazy("gymburgdorf:login"))
 @gymburgdorf_user_required(klasse="23h")
 def maturabooks_api(request):
     try:
@@ -92,7 +85,7 @@ def maturabooks_api(request):
 # MULUS collection
 
 
-@login_required(login_url=reverse_lazy("gymburgdorf:23h-login"))
+@login_required(login_url=reverse_lazy("gymburgdorf:login"))
 @gymburgdorf_user_required(klasse="23h")
 def muluscollection(request):
     if request.method == "POST":
@@ -115,7 +108,7 @@ def muluscollection(request):
         })
 
 
-@login_required(login_url=reverse_lazy("gymburgdorf:23h-login"))
+@login_required(login_url=reverse_lazy("gymburgdorf:login"))
 @gymburgdorf_user_required(klasse="23h")
 def muluscollection_api(request):
     try:

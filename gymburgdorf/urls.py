@@ -14,6 +14,10 @@ urlpatterns = [
     # Fake-Static
     path('manifest.json', views.manifest, name="manifest"),
 
+    # account
+    path('login', views.login, name="login"),
+    path('logout', views.logout, name="logout"),
+
     # 23h
     path('23h/', include('gymburgdorf.my23h.urls')),
 

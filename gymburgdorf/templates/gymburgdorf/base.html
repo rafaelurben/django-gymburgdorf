@@ -25,7 +25,22 @@
 
     <body class="bg-dark text-white">
         <div class="m-4 bg-dark">
-            {% block menubar %}{% endblock menubar %}
+            {% block menubar %}
+                <div class="row mb-3">
+                    <div class="col-4">
+                        {% block backbutton %}
+                            <a class="text-white text-decoration-none" href="{% block backurl %}{% url 'gymburgdorf:home' %}{% endblock backurl %}"><i class="fas fa-arrow-left"></i> Zurück</a>
+                        {% endblock backbutton %}
+                    </div>
+                    <div class="col-8 text-end">
+                        {% if request.user.is_authenticated %}
+                            Du bist eingeloggt als <strong>{{ user.username }}</strong>.
+                        {% else %}
+                            Du bist nicht eingeloggt.
+                        {% endif %}
+                    </div>
+                </div>
+            {% endblock menubar %}
             {% block heading %}
                 <h1>GymBurgdorf</h1>
             {% endblock heading %}

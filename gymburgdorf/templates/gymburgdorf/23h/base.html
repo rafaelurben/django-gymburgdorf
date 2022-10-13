@@ -1,18 +1,5 @@
 {% extends 'gymburgdorf/base.html' %}
 
-{% block menubar %}
-    <div class="row mb-3">
-        <div class="col-4">
-            <a class="text-white text-decoration-none" href="{% block backurl %}{% url 'gymburgdorf:23h' %}{% endblock backurl %}"><i class="fas fa-arrow-left"></i> Zurück</a>
-        </div>
-        <div class="col-8 text-end">
-            {% if request.user.is_authenticated %}
-                Du bist eingeloggt als <strong>{{ user.username }}</strong>.
-            {% else %}
-                Du bist nicht eingeloggt.
-            {% endif %}
-        </div>
-    </div>
-{% endblock menubar %}
+{% block backurl %}{% url 'gymburgdorf:23h' %}{% endblock backurl %}
 
 {% block fulltitle %}{% block title %}{% endblock title %} - 23h - GymBurgdorf{% endblock fulltitle %}

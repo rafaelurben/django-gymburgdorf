@@ -8,10 +8,6 @@ urlpatterns = [
     # 23h home
     path('', views.home, name="23h"),
 
-    # 23h account
-    path('login', views.login, name="23h-login"),
-    path('logout', views.logout, name="23h-logout"),
-
     # Maturabooks
     path('maturabooks', views.maturabooks),
     path('maturabooks/', views.maturabooks, name="23h-maturabooks"),
