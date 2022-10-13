@@ -11,7 +11,7 @@ def home(request):
 # Fake-Static
 
 def manifest(request):
-    response = render(request, "gymburgdorf/manifest.webmanifest", {})
+    response = render(request, "gymburgdorf/manifest.json", {})
     response['Content-Type'] = 'text/json'
     response["Service-Worker-Allowed"] = reverse('gymburgdorf:home')
     return response
