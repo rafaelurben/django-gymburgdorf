@@ -49,7 +49,7 @@ B: «HI!»" minlength="10"></textarea>
                     <th>Erstellt&nbsp;am</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tablebody">
                 {% for quote in quotes %}
                     <tr>
                         <td>{{ quote.person_names }}</td>
@@ -95,12 +95,21 @@ B: «HI!»" minlength="10"></textarea>
     </div>
 
     <script>
+        function setup() {
+            $('table a[href]').click(function(e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                $('#tablebody').load(url + ' #tablebody > *', undefined, setup)
+            });
+        }
+        
         $(document).ready(function() {
             $('#quote_add_people_select').select2({
                 theme: 'bootstrap-5',
                 width: '100%',
                 placeholder: 'Personen suchen & auswählen',
             });
+            setup();
         });
     </script>
 {% endblock content %}
