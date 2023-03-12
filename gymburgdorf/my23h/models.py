@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.functions import Cast
+from django.urls import reverse
 from django.conf import settings
 
 
@@ -115,18 +116,44 @@ class MulusCollectionQuote(models.Model):
     def __str__(self) -> str:
         return self.content[:50]
 
+    def as_dict(self, user=None):
+        if not hasattr(self, 'can_delete'):
+            self = self._get_qs(user).get(pk=self.pk)
+            
+        user_like = getattr(self, 'user_review_like')
+        return {
+            'id': self.pk,
+            'content': self.content,
+            'created_by': self.created_by.username,
+            'created_at': self.created_at.strftime("%d.%m.%Y %H:%M"),
+            'person_names': self.person_names(),
+            'total_likes': getattr(self, 'total_likes'),
+            'total_dislikes': getattr(self, 'total_dislikes'),
+            'total_reviews': getattr(self, 'total_reviews'),
+            'user_review_like': True if user_like == 1 else False if user_like == 0 else None,
+            'percentage_likes': getattr(self, 'percentage_likes'),
+            'can_delete': getattr(self, 'can_delete'),
+            'admin_url': None if user is None or not user.is_superuser else reverse('admin:gymburgdorf_muluscollectionquote_change', args=[self.pk]),
+        }
+
     @classmethod
-    def get_quotes_with_reviews(cls, user):
-        return cls.objects.all().prefetch_related(
+    def _get_qs(cls, user):
+        is_admin = user.is_superuser
+        return cls.objects.prefetch_related(
             'reviews', 'created_by', 'people'
         ).annotate(
             total_likes=models.Sum(models.Case(models.When(reviews__like=True, then=1), default=0)),
             total_dislikes=models.Sum(models.Case(models.When(reviews__like=False, then=1), default=0)),
             total_reviews=models.Count('reviews'),
             user_review_like=models.Sum(models.Case(models.When(reviews__user_id=user.pk, then=models.Case(models.When(reviews__like=True, then=1), default=0)), default=None)),
+            can_delete=models.Case(models.When(created_by_id=user.pk, then=True), default=is_admin),
         ).annotate(
             percentage_likes=Cast('total_likes', models.FloatField())/Cast('total_reviews', models.FloatField())
         ).order_by('-percentage_likes', '-total_likes')
+
+    @classmethod
+    def get_quotes_with_reviews(cls, user):
+        return cls._get_qs(user).all()
 
 class MulusCollectionPersonQuoteRelation(models.Model):
     quote = models.ForeignKey(to="MulusCollectionQuote", on_delete=models.CASCADE)
@@ -140,6 +167,10 @@ class MulusCollectionPersonQuoteRelation(models.Model):
 
     def __str__(self) -> str:
         return f"Verbindung #{self.id}"
+
+    @property
+    def content(self):
+        return self.quote.content
 
 class MulusCollectionQuoteReview(models.Model):
     quote = models.ForeignKey(to="MulusCollectionQuote", related_name='reviews', on_delete=models.CASCADE)

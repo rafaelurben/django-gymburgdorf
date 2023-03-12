@@ -7,6 +7,10 @@
         .mfix {
             margin: 1px 1px 1px 0;
         }
+
+        .multiline {
+            white-space: pre-line;
+        }
     </style>
 {% endblock extrahead %}
 
@@ -26,7 +30,7 @@
         {% csrf_token %}
         <input hidden name="method" value="add">
         <textarea required name="content" id="content" rows="3" class="form-control my-1" placeholder="A: «Hallo!»
-B: «HI!»" minlength="10"></textarea>
+B: «HI!»" minlength="10" autofocus></textarea>
         <select required multiple name="people" id="quote_add_people_select">
             {% for person in people %}
                 <option value="{{ person.id }}">{{ person.first_name }} {{ person.last_name }}</option>
@@ -35,81 +39,168 @@ B: «HI!»" minlength="10"></textarea>
         <input type="submit" value="Zitat hinzufügen" class="btn btn-primary my-1">
     </form>
 
+    <h3 class="mt-2">Zitate filtern</h3>
+
+    <input oninput="loadData(true)" type="text" name="q" id="query" class="form-control my-1" placeholder="Suchbegriff eingeben" value="{{ query }}">
+    <select multiple name="people_query" id="quote_search_people_select">
+        {% for person in people %}
+            <option value="{{ person.id }}">{{ person.first_name }} {{ person.last_name }}</option>
+        {% endfor %}
+    </select>
+    <button onclick="loadData()" class="btn btn-primary my-1">Suchen</button>
+
     <h3 class="mt-2">Zitate</h3>
 
     <div class="w-100 overflow-scroll">
         <table class="table table-striped table-dark overflow-scroll">
             <thead>
                 <tr>
-                    <th>Personen</th>
-                    <th>Zitat</th>
-                    <th>Bewertung</th>
-                    <th>Aktionen</th>
-                    <th>Erstellt&nbsp;von</th>
-                    <th>Erstellt&nbsp;am</th>
+                    <th style="min-width: 8em;">Personen</th>
+                    <th style="min-width: 20em;">Zitat</th>
+                    <th colspan="2">Bewertung</th>
+                    <th style="min-width: 10em;">Erstellt</th>
                 </tr>
             </thead>
             <tbody id="tablebody">
-                {% for quote in quotes %}
-                    <tr>
-                        <td>{{ quote.person_names }}</td>
-                        <td>{{ quote.content }}</td>
-                        <td>{{ quote.total_likes }} / {{ quote.total_dislikes }} (Total {{ quote.total_reviews }})</td>
-                        <td>
-                            {% if quote.user_review_like is None %}
-                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=like&q={{ quote.id }}" class="btn btn-outline-success mfix">
-                                    <i class="fas fa-fw fa-thumbs-up"></i>
-                                </a>
-                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=dislike&q={{ quote.id }}" class="btn btn-outline-danger mfix">
-                                    <i class="fas fa-fw fa-thumbs-down"></i>
-                                </a>
-                            {% elif quote.user_review_like %}
-                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=remove_review&q={{ quote.id }}" class="btn btn-success mfix">
-                                <i class="fas fa-fw fa-thumbs-up"></i>
-                                </a>
-                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=dislike&q={{ quote.id }}" class="btn btn-outline-danger mfix">
-                                    <i class="fas fa-fw fa-thumbs-down"></i>
-                                </a>
-                            {% else %}
-                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=like&q={{ quote.id }}" class="btn btn-outline-success mfix">
-                                    <i class="fas fa-fw fa-thumbs-up"></i>
-                                </a>
-                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=remove_review&q={{ quote.id }}" class="btn btn-danger mfix">
-                                    <i class="fas fa-fw fa-thumbs-down"></i>
-                                </a>
-                            {% endif %}
-                            {% if quote.created_by == request.user or request.user.is_superuser %}
-                                <a href="{% url 'gymburgdorf:23h-muluscollection-api' %}?a=delete&q={{ quote.id }}" class="btn btn-danger mfix"><i class="fas fa-fw fa-trash"></i></a>
-                            {% endif %}
-                            </td>
-                        <td>{{ quote.created_by.username }}</td>
-                        <td>{{ quote.created_at|date:"DATETIME_FORMAT" }}</td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="5">Noch nichts vorhanden...</td>
-                    </tr>
-                {% endfor %}
+                <tr>
+                    <td colspan="7">Noch nichts vorhanden...</td>
+                </tr>
             </tbody>
         </table>
     </div>
 
     <script>
-        function setup() {
-            $('table a[href]').click(function(e) {
-                e.preventDefault();
-                var url = $(this).attr('href');
-                $('#tablebody').load(url + ' #tablebody > *', undefined, setup)
+        const url_list = '{% url "gymburgdorf:23h-muluscollection-api-list" %}';
+        const url_action = '{% url "gymburgdorf:23h-muluscollection-api-action" %}';
+
+        let store = {
+            quotes: [],
+            people_query: null,
+        };
+
+        function getLikeDislikeButtons(quote) {
+            switch (quote.user_review_like) {
+                case true:
+                    return `<a href="${url_action}?a=remove_review&q=${quote.id}" class="btn btn-success mfix" onclick="handleLikeDislikeButtonClick(event)">
+                                <i class="fas fa-fw fa-thumbs-up"></i>
+                            </a>
+                            <a href="${url_action}?a=dislike&q=${quote.id}" class="btn btn-outline-danger mfix" onclick="handleLikeDislikeButtonClick(event)">
+                                <i class="fas fa-fw fa-thumbs-down"></i>
+                            </a>`;
+                case false:
+                    return `<a href="${url_action}?a=like&q=${quote.id}" class="btn btn-outline-success mfix" onclick="handleLikeDislikeButtonClick(event)">
+                                <i class="fas fa-fw fa-thumbs-up"></i>
+                            </a>
+                            <a href="${url_action}?a=remove_review&q=${quote.id}" class="btn btn-danger mfix" onclick="handleLikeDislikeButtonClick(event)">
+                                <i class="fas fa-fw fa-thumbs-down"></i>
+                            </a>`;
+                default:
+                    return `<a href="${url_action}?a=like&q=${quote.id}" class="btn btn-outline-success mfix" onclick="handleLikeDislikeButtonClick(event)">
+                                <i class="fas fa-fw fa-thumbs-up"></i>
+                            </a>
+                            <a href="${url_action}?a=dislike&q=${quote.id}" class="btn btn-outline-danger mfix" onclick="handleLikeDislikeButtonClick(event)">
+                                <i class="fas fa-fw fa-thumbs-down"></i>
+                            </a>`;
+            }
+        }
+
+        function getLikeInfoText(quote) {
+            return `${quote.total_likes-quote.total_dislikes} (${quote.total_reviews})`;
+        }
+
+        function getRow(quote) {
+            return `<tr id="quote-${quote.id}" data-id="${quote.id}">
+                        <td>${quote.person_names}</td>
+                        <td class="multiline">${quote.content}</td>
+                        <td class="likeinfo">
+                            ${getLikeInfoText(quote)}
+                        </td>
+                        <td class="likeactions">
+                            ${getLikeDislikeButtons(quote)}
+                        </td>
+                        <td>${quote.created_at}<br>von&nbsp;${quote.created_by}</td>
+                        <td>
+                            ${quote.can_delete ? `<a href="${url_action}?a=delete&q=${quote.id}" class="btn btn-danger mfix" onclick="handleLikeDislikeButtonClick(event)"><i class="fas fa-fw fa-trash"></i></a>` : ''}
+                        </td>
+                        <td>
+                            ${quote.admin_url ? `<a href="${quote.admin_url}" class="btn btn-primary mfix"><i class="fas fa-fw fa-edit"></i></a>` : ''}
+                        </td>
+                    </tr>`;
+        }
+
+        function handleLikeDislikeButtonClick(e) {
+            e.preventDefault();
+            const target = e.target.closest('a');
+            const url = target.href;
+            const row = $(e.target.closest('tr'));
+            $.getJSON(url, function(data) {
+                if (data.success) {
+                    if (data.deleted) {
+                        row.remove();
+                    } else if (data.hasOwnProperty('quote')) {
+                        row.children('.likeinfo').html(getLikeInfoText(data.quote));
+                        row.children('.likeactions').html(getLikeDislikeButtons(data.quote));
+                    }
+                } else {
+                    alert(data.message);
+                }
             });
         }
-        
+
+        function fuzzy(string, term, ratio) {
+            var string = string.toLowerCase();
+            var compare = term.toLowerCase();
+            var matches = 0;
+            if (string.indexOf(compare) > -1) return true; // covers basic partial matches
+            for (var i = 0; i < compare.length; i++) {
+                string.indexOf(compare[i]) > -1 ? matches += 1 : matches -=1;
+            }
+            return (matches/string.length >= ratio || term == "")
+        }
+
+        function displayQuotes(quotes) {
+            $('#tablebody').html('');
+            quotes.forEach(quote => {
+                $('#tablebody').append(getRow(quote));
+            });
+        }
+
+        function loadData(soft=false) {
+            let query = $('#query').val();
+            let people_query = $('#quote_search_people_select').val().join(',');
+            console.log(soft)
+
+            if (soft) {            
+                let filtered = store.quotes.filter(quote => {
+                    if (query.length > 0) {
+                        return fuzzy(quote.content, query, 0.5);
+                    } else {
+                        return true;
+                    }
+                });
+                displayQuotes(filtered);
+            } else {
+                $.getJSON(url_list, {p: people_query}, function(data) {
+                    store.quotes = data.quotes;
+                    store.people_query = null;
+                    displayQuotes(data.quotes);
+                });
+            }
+        }
+
         $(document).ready(function() {
             $('#quote_add_people_select').select2({
                 theme: 'bootstrap-5',
                 width: '100%',
-                placeholder: 'Personen suchen & auswählen',
+                placeholder: 'Personen zum hinzufügen auswählen',
             });
-            setup();
+            $('#quote_search_people_select').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: 'Personen zum filtern auswählen',
+            });
+
+            loadData();
         });
     </script>
 {% endblock content %}

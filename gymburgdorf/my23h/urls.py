@@ -17,8 +17,9 @@ urlpatterns = [
     # MULUS collection
     path('muluscollection', views.muluscollection),
     path('muluscollection/', views.muluscollection, name="23h-muluscollection"),
-    path('muluscollection/api',
-         views.muluscollection_api, name="23h-muluscollection-api"),
+    path("muluscollection/api/list", views.muluscollection_api_list, name="23h-muluscollection-api-list"),
+    path('muluscollection/api/action',
+         views.muluscollection_api_action, name="23h-muluscollection-api-action"),
 
     # Not found
     re_path('^.*$', views.notfound),
