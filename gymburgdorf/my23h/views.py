@@ -213,5 +213,7 @@ def muluscollection_api_action(request):
 
 # Summaries
 
+@login_required(login_url=reverse_lazy("gymburgdorf:login"))
+@gymburgdorf_user_required(klasse="23h")
 def summaries(request):
     return render(request, "gymburgdorf/23h/summaries.html")
