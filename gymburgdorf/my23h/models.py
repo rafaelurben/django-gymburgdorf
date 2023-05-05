@@ -131,7 +131,7 @@ class MulusCollectionQuote(models.Model):
             'total_dislikes': getattr(self, 'total_dislikes'),
             'total_reviews': getattr(self, 'total_reviews'),
             'user_review_like': True if user_like == 1 else False if user_like == 0 else None,
-            'percentage_likes': getattr(self, 'percentage_likes'),
+            'score': getattr(self, 'score'),
             'can_delete': getattr(self, 'can_delete'),
             'admin_url': None if user is None or not user.is_superuser else reverse('admin:gymburgdorf_muluscollectionquote_change', args=[self.pk]),
         }
@@ -148,8 +148,8 @@ class MulusCollectionQuote(models.Model):
             user_review_like=models.Sum(models.Case(models.When(reviews__user_id=user.pk, then=models.Case(models.When(reviews__like=True, then=1), default=0)), default=None)),
             can_delete=models.Case(models.When(created_by_id=user.pk, then=True), default=is_admin),
         ).annotate(
-            percentage_likes=Cast('total_likes', models.FloatField())/Cast('total_reviews', models.FloatField())
-        ).order_by('-percentage_likes', '-total_likes')
+            score=Cast('total_likes', models.FloatField())-Cast('total_dislikes', models.FloatField())
+        ).order_by('-score', '-total_reviews')
 
     @classmethod
     def get_quotes_with_reviews(cls, user):

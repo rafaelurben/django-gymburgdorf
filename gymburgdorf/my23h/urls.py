@@ -21,6 +21,10 @@ urlpatterns = [
     path('muluscollection/api/action',
          views.muluscollection_api_action, name="23h-muluscollection-api-action"),
 
+    # Summaries
+    path('summaries', views.summaries),
+    path('summaries/', views.summaries, name="23h-summaries"),
+
     # Not found
     re_path('^.*$', views.notfound),
 ]

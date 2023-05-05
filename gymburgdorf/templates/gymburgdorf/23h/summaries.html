@@ -1,0 +1,121 @@
+{% extends 'gymburgdorf/23h/base.html' %}
+
+{% block title %}Rafaels Zusammenfassungen{% endblock title %}
+
+{% block heading %}
+    <h1>Rafaels Zusammenfassungen</h1>
+{% endblock heading %}
+
+{% block content %}
+
+    <p>Zusammenfassungen für die Matur von Rafael.</p>
+
+    <div class="alert alert-warning" role="alert">
+        <strong>WICHTIG:</strong> Diese Dateien sind nur für den persönlichen Gebrauch bestimmt und dürfen nicht weitergegeben werden!
+    </div>
+
+
+    <div id="content">
+
+    </div>
+
+{% endblock content %}
+
+{% block scripts %}
+    <script>
+        let BASEURL = "https://static.rafaelurben.ch/downloads/summaries/";
+        let INDEXURL = BASEURL + "index.json";
+        
+        // Fetch index.json file
+        
+        fetch(INDEXURL)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                let subjects = data.subjects;
+                let content = document.getElementById("content");
+
+                for (let i = 0; i < subjects.length; i++) {
+                    let subject = subjects[i];
+                    let subjectDiv = document.createElement("div");
+                    subjectDiv.classList.add("subject");
+                    let subjectHeading = document.createElement("h2");
+                    subjectHeading.innerText = subject.title;
+                    subjectDiv.appendChild(subjectHeading);
+                    accordion = document.createElement("div");
+                    accordion.classList.add("accordion");
+                    accordion.classList.add("my-3")
+                    accordion.id = "accordion-" + i;
+                    subjectDiv.appendChild(accordion);
+
+                    // Create an accordion item for each summary
+                    let summaries = subject.summaries;
+                    for (let j = 0; j < summaries.length; j++) {
+                        let summary = summaries[j];
+                        console.log(summary)
+                        
+                        let accordionItem = document.createElement("div");
+                        accordionItem.classList.add("accordion-item");
+                        accordion.appendChild(accordionItem);
+                        
+                        let accordionHeader = document.createElement("h3");
+                        accordionHeader.classList.add("accordion-header");
+                        accordionHeader.id = "heading-" + i + "-" + j;
+                        accordionItem.appendChild(accordionHeader);
+                        
+                        let accordionButton = document.createElement("button");
+                        accordionButton.classList.add("accordion-button");
+                        accordionButton.classList.add("collapsed");
+                        accordionButton.setAttribute("type", "button");
+                        accordionButton.setAttribute("data-bs-toggle", "collapse");
+                        accordionButton.setAttribute("data-bs-target", "#collapse-" + i + "-" + j);
+                        accordionButton.setAttribute("aria-expanded", "false");
+                        accordionButton.setAttribute("aria-controls", "collapse-" + i + "-" + j);
+                        accordionButton.innerText = summary.title;
+                        accordionHeader.appendChild(accordionButton);
+
+                        let accordionCollapse = document.createElement("div");
+                        accordionCollapse.classList.add("accordion-collapse");
+                        accordionCollapse.classList.add("collapse");
+                        accordionCollapse.id = "collapse-" + i + "-" + j;
+                        accordionCollapse.setAttribute("aria-labelledby", "heading-" + i + "-" + j);
+                        accordionCollapse.setAttribute("data-bs-parent", "#accordion-" + i);
+                        accordionItem.appendChild(accordionCollapse);
+
+                        let accordionBody = document.createElement("div");
+                        accordionBody.classList.add("accordion-body");
+                        accordionCollapse.appendChild(accordionBody);
+
+                        // Add description and download link
+
+                        let url = BASEURL + subject.path + "/" + summary.file;
+
+                        let description = document.createElement("p");
+                        description.innerText = summary.description;
+                        accordionBody.appendChild(description);
+
+                        /* 
+                        let embed = document.createElement("iframe");
+                        embed.classList.add("embed-responsive");
+                        embed.classList.add("embed-responsive-16by9");
+                        embed.src = url;
+                        embed.allowfullscreen = true;
+                        accordionBody.appendChild(embed);
+                        */
+
+                        let download = document.createElement("a");
+                        download.classList.add("btn");
+                        download.classList.add("btn-primary");
+                        download.classList.add("mt-3");
+                        download.href = url;
+                        download.target = "_blank";
+                        download.innerText = "Ansehen / Herunterladen";
+                        accordionBody.appendChild(download);
+                    }
+
+                    content.appendChild(subjectDiv);
+                }
+            });
+
+    </script>
+{% endblock scripts %}

@@ -17,7 +17,7 @@ def home(request):
 
 def notfound(request):
     messages.error(request, "Diese Seite existiert nicht!", extra_tags="alert-danger")
-    return render(request, "gymburgdorf/23h/error.html")
+    return render(request, "gymburgdorf/404.html")
 
 # Maturabooks
 
@@ -210,3 +210,8 @@ def muluscollection_api_action(request):
         # messages.error(request, f"Ungültige Aktions: '{action}'!", extra_tags="alert-danger")
         return JsonResponse({"success": False, "quote": quote.as_dict(request.user), "message": f"Ungültige Aktions: '{action}'!"})
     # return redirect(reverse('gymburgdorf:23h-muluscollection'))
+
+# Summaries
+
+def summaries(request):
+    return render(request, "gymburgdorf/23h/summaries.html")
