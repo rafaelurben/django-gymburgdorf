@@ -1,19 +1,21 @@
 {% extends 'gymburgdorf/23h/base.html' %}
 
-{% block title %}Rafaels Zusammenfassungen{% endblock title %}
+{% block title %}Zusammenfassungen{% endblock title %}
 
 {% block heading %}
-    <h1>Rafaels Zusammenfassungen</h1>
+    <h1>Zusammenfassungen</h1>
 {% endblock heading %}
 
 {% block content %}
 
-    <p>Zusammenfassungen für die Matur von Rafael.</p>
+    <p>Zusammenfassungen und wichtige Dateien für die Matur.</p>
 
     <div class="alert alert-warning" role="alert">
-        <strong>WICHTIG:</strong> Diese Dateien sind nur für den persönlichen Gebrauch bestimmt und dürfen nicht weitergegeben werden!
+        <strong>WICHTIG:</strong> Zusammenfassungen sind nur für den persönlichen Gebrauch bestimmt und dürfen nicht weitergegeben werden!
     </div>
-
+    <div class="alert alert-info" role="alert">
+        <strong>Fehler gefunden?</strong> Bitte sofort bei Rafael melden!
+    </div>
 
     <div id="content">
 
@@ -42,7 +44,10 @@
                     let subjectHeading = document.createElement("h2");
                     subjectHeading.innerText = subject.title;
                     subjectDiv.appendChild(subjectHeading);
-                    accordion = document.createElement("div");
+                    let subjectDescription = document.createElement("p");
+                    subjectDescription.innerText = subject.description || "";
+                    subjectDiv.appendChild(subjectDescription);
+                    let accordion = document.createElement("div");
                     accordion.classList.add("accordion");
                     accordion.classList.add("my-3")
                     accordion.id = "accordion-" + i;
@@ -91,7 +96,7 @@
                         let url = BASEURL + subject.path + "/" + summary.file;
 
                         let description = document.createElement("p");
-                        description.innerText = summary.description;
+                        description.innerText = summary.description || "";
                         accordionBody.appendChild(description);
 
                         /* 
